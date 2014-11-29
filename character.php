@@ -12,6 +12,9 @@
         if (isset($_GET['name'], $_GET['region'], $_GET['realm'], $_GET['locale'], $_GET['fields'])){
             echo BattleNet_getCharacter($_GET['name'], $_GET['realm'], $_GET['region'], $_GET['locale'], $_GET['fields']);
         }
+        else {
+            echo json_encode(array("error"=>-1,'message'=>"Supply required parameters"));
+        }
         ?>
     </body>
 </html>

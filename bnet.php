@@ -39,11 +39,10 @@ function BattleNet_getRealmStatus($region, $locale) {
         return FALSE;
     }
     else {
-        //-- $json_wow_api_url = file_get_contents('https://'.$RegionName.'.api.battle.net/'.$GameName.'/realm/status?locale='.$LocaleName.'&apikey='.$APIkey.'');
         $badCharacters = array(' ');
         $goodCharacters = array('%20');
-        $path = "/api/wow/realm/status";
-        $url = "https://".strtolower($region).".api.battle.net".$path."?locale=".$locale."apikey=".API_KEY;
+        $path = "/wow/realm/status";
+        $url = "https://".strtolower($region).".api.battle.net".$path."?locale=".$locale."&apikey=".API_KEY;
         $req = date('D, d M Y H:i:s T');
         $header = array(
             "Accept:",

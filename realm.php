@@ -12,6 +12,9 @@
         if (isset($_GET['region '], $_GET['locale'])){
             echo BattleNet_getRealmStatus($_GET['region'], $_GET['locale']);
         }
+        else {
+            echo json_encode(array("error"=>-1,'message'=>"Supply required parameters"));
+        }
         ?>
     </body>
 </html>
