@@ -11,7 +11,7 @@ class Houston {
             
     function __construct($locale) {
         $this->locale = ( !empty($locale) ? $locale : "en_US");
-        $this->currSatellite = Houston::getCurrentSatellite();
+        $this->currSatellite = 0; //Houston::getCurrentSatellite();
         $this->satellites = Houston::getAllSatellites();
         $this->satelliteCardinality = count($this->satellites);
     }
@@ -95,20 +95,20 @@ class Houston {
         }
     }
     
-    private function getItem($itemID, $region) {
-        $j = file_get_contents($this->satellites[$this->currSatellite-1]."item.php?id=".$itemID."&region=".$region."&locale=".$this->locale);
+    public function getItem($itemID, $region) {
+        $j = file_get_contents($this->satellites[$this->currSatellite]."item.php?id=".$itemID."&region=".$region."&locale=".$this->locale);
         $this->currSatellite = ($this->currSatellite + 1) % $this->satelliteCardinality;
         return $j;
     }
     
     public function getCharacter($name, $realm, $region, $keys) {
-        $j = file_get_contents($this->satellites[$this->currSatellite-1]."character.php?name=".$name."&region=".$region."&realm=".$realm."&locale=".$this->locale."&fields=".$keys);
+        $j = file_get_contents($this->satellites[$this->currSatellite]."character.php?name=".$name."&region=".$region."&realm=".$realm."&locale=".$this->locale."&fields=".$keys);
         $this->currSatellite = ($this->currSatellite + 1) % $this->satelliteCardinality;
         return $j;
     }
     
     public function getRealm($region) {
-        $j = file_get_contents($this->satellites[$this->currSatellite-1]."realm.php?region=".$region."&locale=".$this->locale);
+        $j = file_get_contents($this->satellites[$this->currSatellite]."realm.php?region=".$region."&locale=".$this->locale);
         $this->currSatellite = ($this->currSatellite + 1) % $this->satelliteCardinality;
         return $j;
     }
