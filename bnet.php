@@ -67,4 +67,41 @@ function BattleNet_getRealmStatus($region, $locale) {
     }
 }
 
+function BattleNet_getRawItem($itemID, $region, $locale) {
+    if (empty($itemID) || !is_numeric($itemID)){
+        return FALSE;
+    }
+    else {
+        $badCharacters = array('%21', '%26', '%27', '%28', '%29', '%3A', '%40', '+');
+        $goodCharacters = array('!', '&', '\'', '(', ')', ':', '@', '-');
+        $signPath = "/api/wow/item/".urlencode($itemID);
+        $signPath = str_replace($badCharacters, $goodCharacters, $signPath);
+
+        $path = "/wow/item/".$itemID;
+        $url = "https://".strtolower($region).".api.battle.net".$path."?locale=".$locale."&apikey=".API_KEY;
+        $req = date('D, d M Y H:i:s T');
+
+        $header = array(
+            "Accept:",
+            "Date: " . $req,
+            "Content-Type: application/x-www-form-urlencoded; charset=utf-8",
+        );
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+        curl_setopt($ch, CURLOPT_FRESH_CONNECT, 2);
+        curl_setopt($ch, CURLOPT_HTTPHEADER,$header);
+        $e = curl_exec($ch);
+        if (curl_errno($ch) === 0){
+            return $e;
+        }
+        else {
+            trigger_error("cURL could not connect to Battle.net Item api. Curl error number:".curl_errno($ch));
+            return FALSE;
+        }
+    }
+}
+
 ?>
