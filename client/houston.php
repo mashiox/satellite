@@ -11,7 +11,7 @@ class Houston {
             
     function __construct($locale) {
         $this->locale = ( !empty($locale) ? $locale : "en_US");
-        $this->currSatellite = 0; //Houston::getCurrentSatellite();
+        $this->currSatellite = Houston::getCurrentSatellite();
         $this->satellites = Houston::getAllSatellites();
         $this->satelliteCardinality = count($this->satellites);
     }
@@ -81,8 +81,8 @@ class Houston {
     
     private function updateCurrSatellite($id) {
         $stmt = $GLOBALS['mysqli']->prepare("update whozawhat_currSatellite set last = ? where id = 1");
-        if ($stmt !== FALSE && (int)$id > 0 ){
-            $stmt->bind_param('i', (int)$id);
+        if ($stmt !== FALSE && (int)$id >= 0 ){
+            $stmt->bind_param('i', $id);
             if ($stmt->execute()){
                 return TRUE;
             }
@@ -98,18 +98,21 @@ class Houston {
     public function getItem($itemID, $region) {
         $j = file_get_contents($this->satellites[$this->currSatellite]."item.php?id=".$itemID."&region=".$region."&locale=".$this->locale);
         $this->currSatellite = ($this->currSatellite + 1) % $this->satelliteCardinality;
+        $this->updateCurrSatellite($this->currSatellite);
         return $j;
     }
     
     public function getCharacter($name, $realm, $region, $keys) {
         $j = file_get_contents($this->satellites[$this->currSatellite]."character.php?name=".$name."&region=".$region."&realm=".$realm."&locale=".$this->locale."&fields=".$keys);
         $this->currSatellite = ($this->currSatellite + 1) % $this->satelliteCardinality;
+        $this->updateCurrSatellite($this->currSatellite);
         return $j;
     }
     
     public function getRealm($region) {
         $j = file_get_contents($this->satellites[$this->currSatellite]."realm.php?region=".$region."&locale=".$this->locale);
         $this->currSatellite = ($this->currSatellite + 1) % $this->satelliteCardinality;
+        $this->updateCurrSatellite($this->currSatellite);
         return $j;
     }
     
