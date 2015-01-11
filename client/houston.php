@@ -116,6 +116,13 @@ class Houston {
         return $j;
     }
     
+    public function getItemContext($itemID, $region, $context) {
+        $j = file_get_contents($this->satellites[$this->currSatellite]."itemContext.php?id=".$itemID."&region=".$region."&locale=".$this->locale."&context=".$context);
+        $this->currSatellite = ($this->currSatellite + 1) % $this->satelliteCardinality;
+        $this->updateCurrSatellite($this->currSatellite);
+        return $j;
+    }
+    
 }
 
 ?>
