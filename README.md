@@ -1,4 +1,4 @@
-# satellite
+# satellite [![Code Climate](https://codeclimate.com/github/mashiox/satellite/badges/gpa.svg)](https://codeclimate.com/github/mashiox/satellite)
 A small revolving WoW API client, and it's controlling client.
 
 Satellite is a small procedural World of Warcraft API client for calling various API methods. 
