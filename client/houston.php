@@ -64,11 +64,11 @@ class Houston {
             $exec = $stmt->execute();
             if ($exec){
                 $stmt->store_result();
-                $stmt->bind_result($url_path);
+                $stmt->bind_result($urlPath);
                 $stmt->fetch();
                 $satArr = array();
                 for ($i=0; $i < $stmt->num_rows; $i++){
-                    $satArr[$i] = $url_path;
+                    $satArr[$i] = $urlPath;
                     $stmt->fetch();
                 }
                 return $satArr;
