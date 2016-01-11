@@ -1,6 +1,6 @@
 <?php
 
-class bnet_helper {
+class bnetHelper {
     
     private function __construct() {}
     
