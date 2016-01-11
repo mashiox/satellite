@@ -16,7 +16,7 @@ class Houston {
         $this->satelliteCardinality = count($this->satellites);
     }
     
-    public static function getCurrentSatellite() {
+    public function getCurrentSatellite() {
         //$stmt = $GLOBALS['mysqli']->prepare("select `last` from whozawhat_currSatellite where id=1");
         $stmt = DB::connection()->prepare("select `last` from whozawhat_currSatellite where id=1");
         if ($stmt !== FALSE){
@@ -32,7 +32,7 @@ class Houston {
         return -1; // Something blew up
     }
     
-    private static function getSatellite($satId) {
+    private function getSatellite($satId) {
         //$stmt = $GLOBALS['mysqli']->prepare("select `url_path` from whozawhat_satellite where id=?");
         $stmt = DB::connection()->prepare("select `url_path` from whozawhat_satellite where id=?");
         if ($stmt !== FALSE){
