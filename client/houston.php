@@ -27,13 +27,9 @@ class Houston {
                 $stmt->fetch();
                 return $last;
             }
-            else {
-                return -1;
-            }
+            return -1;
         }
-        else {
-            return -1; // Something blew up
-        }
+        return -1; // Something blew up
     }
     
     private static function getSatellite($id) {
@@ -48,13 +44,9 @@ class Houston {
                 $stmt->fetch();
                 return $urlPath;
             }
-            else {
-                return -1;
-            }
+            return -1;
         }
-        else {
-            return -1; // Something blew up
-        }
+        return -1; // Something blew up
     }
     
     private static function getAllSatellites() {
@@ -73,13 +65,9 @@ class Houston {
                 }
                 return $satArr;
             }
-            else {
-                return array(-1);
-            }
+            return array(-1);
         }
-        else {
-            return array(0);
-        }
+        return array(0);
     }
     
     private function updateCurrSatellite($id) {
@@ -90,13 +78,9 @@ class Houston {
             if ($stmt->execute()){
                 return TRUE;
             }
-            else {
-                return FALSE;
-            }
-        }
-        else {
             return FALSE;
         }
+        return FALSE;
     }
     
     public function getItem($itemID, $region) {
