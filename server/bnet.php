@@ -50,12 +50,10 @@ function BattleNet_getRealmStatus($region, $locale) {
 }
 
 function BattleNet_getRawItem($itemID, $region, $locale) {
-    if (empty($itemID) || !is_numeric($itemID)){
+    if ( !trim($itemID) || !is_numeric($itemID)){
         return FALSE;
     }
     $bnHelper = new bnetHelper();
-    $signPath = "/wow/item/".urlencode($itemID);
-    $signPath = str_replace($bnHelper->badCharacters(), $bnHelper->goodCharacters(), $signPath);
 
     $path = "/wow/item/".$itemID;
     $url = $bnHelper->getBNetURL($region, $locale, $path);
@@ -77,12 +75,10 @@ function BattleNet_getRawItem($itemID, $region, $locale) {
 }
 
 function BattleNet_getRawItemWithContext($itemID, $region, $locale, $context) {
-    if (empty($itemID) || !is_numeric($itemID)){
+    if ( !trim($itemID) || !is_numeric($itemID)){
         return FALSE;
     }
     $bnHelper = new bnetHelper();
-    $signPath = "/wow/item/".urlencode($itemID)."/".$context;
-    $signPath = str_replace($bnHelper->badCharacters(), $bnHelper->goodCharacters(), $signPath);
 
     $path = "/wow/item/".$itemID."/".$context;
     $url = $bnHelper->getBNetURL($region, $locale, $path);
