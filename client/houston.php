@@ -44,9 +44,9 @@ class Houston {
             $exec = $stmt->execute();
             if ($exec){
                 $stmt->store_result();
-                $stmt->bind_result($url_path);
+                $stmt->bind_result($urlPath);
                 $stmt->fetch();
-                return $url_path;
+                return $urlPath;
             }
             else {
                 return -1;
@@ -66,12 +66,12 @@ class Houston {
                 $stmt->store_result();
                 $stmt->bind_result($url_path);
                 $stmt->fetch();
-                $a = array();
+                $satArr = array();
                 for ($i=0; $i < $stmt->num_rows; $i++){
-                    $a[$i] = $url_path;
+                    $satArr[$i] = $url_path;
                     $stmt->fetch();
                 }
-                return $a;
+                return $satArr;
             }
             else {
                 return array(-1);
@@ -114,17 +114,17 @@ class Houston {
     }
     
     public function getRealm($region) {
-        $j = file_get_contents($this->satellites[$this->currSatellite]."realm.php?region=".$region."&locale=".$this->locale);
+        $json = file_get_contents($this->satellites[$this->currSatellite]."realm.php?region=".$region."&locale=".$this->locale);
         $this->currSatellite = ($this->currSatellite + 1) % $this->satelliteCardinality;
         $this->updateCurrSatellite($this->currSatellite);
-        return $j;
+        return $json;
     }
     
     public function getItemContext($itemID, $region, $context) {
-        $j = file_get_contents($this->satellites[$this->currSatellite]."itemContext.php?id=".$itemID."&region=".$region."&locale=".$this->locale."&context=".$context);
+        $json = file_get_contents($this->satellites[$this->currSatellite]."itemContext.php?id=".$itemID."&region=".$region."&locale=".$this->locale."&context=".$context);
         $this->currSatellite = ($this->currSatellite + 1) % $this->satelliteCardinality;
         $this->updateCurrSatellite($this->currSatellite);
-        return $j;
+        return $json;
     }
     
 }

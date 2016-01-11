@@ -24,9 +24,9 @@ function BattleNet_getCharacter($name, $realm, $region, $locale, $fields) {
     curl_setopt($ch, CURLOPT_TIMEOUT, 20);
     curl_setopt($ch, CURLOPT_FRESH_CONNECT, 2);
     curl_setopt($ch, CURLOPT_HTTPHEADER,$header);
-    $e = curl_exec($ch);
+    $execStatus = curl_exec($ch);
     if (curl_errno($ch) === 0){
-        return $e;
+        return $execStatus;
     }
     else {
         trigger_error("cURL could not connect to battle.net api. Curl error number:".curl_errno($ch));
@@ -93,9 +93,9 @@ function BattleNet_getRawItem($itemID, $region, $locale) {
         curl_setopt($ch, CURLOPT_TIMEOUT, 20);
         curl_setopt($ch, CURLOPT_FRESH_CONNECT, 2);
         curl_setopt($ch, CURLOPT_HTTPHEADER,$header);
-        $e = curl_exec($ch);
+        $execStatus = curl_exec($ch);
         if (curl_errno($ch) === 0){
-            return $e;
+            return $execStatus;
         }
         else {
             trigger_error("cURL could not connect to Battle.net Item api. Curl error number:".curl_errno($ch));
