@@ -32,11 +32,11 @@ class Houston {
         return -1; // Something blew up
     }
     
-    private static function getSatellite($id) {
+    private static function getSatellite($satId) {
         //$stmt = $GLOBALS['mysqli']->prepare("select `url_path` from whozawhat_satellite where id=?");
         $stmt = DB::connection()->prepare("select `url_path` from whozawhat_satellite where id=?");
         if ($stmt !== FALSE){
-            $stmt->bind_param('i', (int)$id);
+            $stmt->bind_param('i', (int)$satId);
             $exec = $stmt->execute();
             if ($exec){
                 $stmt->store_result();
@@ -70,11 +70,11 @@ class Houston {
         return array(0);
     }
     
-    private function updateCurrSatellite($id) {
+    private function updateCurrSatellite($satId) {
         //$stmt = $GLOBALS['mysqli']->prepare("update whozawhat_currSatellite set last = ? where id = 1");
         $stmt = DB::connection()->prepare("update whozawhat_currSatellite set last = ? where id = 1");
-        if ($stmt !== FALSE && (int)$id >= 0 ){
-            $stmt->bind_param('i', $id);
+        if ($stmt !== FALSE && (int)$satId >= 0 ){
+            $stmt->bind_param('i', $satId);
             if ($stmt->execute()){
                 return TRUE;
             }
@@ -84,17 +84,17 @@ class Houston {
     }
     
     public function getItem($itemID, $region) {
-        $j = file_get_contents($this->satellites[$this->currSatellite]."item.php?id=".$itemID."&region=".$region."&locale=".$this->locale);
+        $json = file_get_contents($this->satellites[$this->currSatellite]."item.php?id=".$itemID."&region=".$region."&locale=".$this->locale);
         $this->currSatellite = ($this->currSatellite + 1) % $this->satelliteCardinality;
         $this->updateCurrSatellite($this->currSatellite);
-        return $j;
+        return $json;
     }
     
     public function getCharacter($name, $realm, $region, $keys) {
-        $j = file_get_contents($this->satellites[$this->currSatellite]."character.php?name=".$name."&region=".$region."&realm=".$realm."&locale=".$this->locale."&fields=".$keys);
+        $json = file_get_contents($this->satellites[$this->currSatellite]."character.php?name=".$name."&region=".$region."&realm=".$realm."&locale=".$this->locale."&fields=".$keys);
         $this->currSatellite = ($this->currSatellite + 1) % $this->satelliteCardinality;
         $this->updateCurrSatellite($this->currSatellite);
-        return $j;
+        return $json;
     }
     
     public function getRealm($region) {
