@@ -10,14 +10,13 @@ class Houston {
     private $satelliteCardinality;
             
     function __construct($locale) {
-        $this->locale = ( !empty($locale) ? $locale : "en_US");
-        $this->currSatellite = Houston::getCurrentSatellite();
-        $this->satellites = Houston::getAllSatellites();
+        $this->locale = ( !trim($locale) ? $locale : "en_US");
+        $this->currSatellite = getCurrentSatellite();
+        $this->satellites = getAllSatellites();
         $this->satelliteCardinality = count($this->satellites);
     }
     
     public function getCurrentSatellite() {
-        //$stmt = $GLOBALS['mysqli']->prepare("select `last` from whozawhat_currSatellite where id=1");
         $stmt = DB::connection()->prepare("select `last` from whozawhat_currSatellite where id=1");
         if ($stmt !== FALSE){
             $exec = $stmt->execute();
@@ -33,7 +32,6 @@ class Houston {
     }
     
     private function getSatellite($satId) {
-        //$stmt = $GLOBALS['mysqli']->prepare("select `url_path` from whozawhat_satellite where id=?");
         $stmt = DB::connection()->prepare("select `url_path` from whozawhat_satellite where id=?");
         if ($stmt !== FALSE){
             $stmt->bind_param('i', (int)$satId);
@@ -50,7 +48,6 @@ class Houston {
     }
     
     private static function getAllSatellites() {
-        //$stmt = $GLOBALS['mysqli']->prepare("select `url_path` from whozawhat_satellite");
         $stmt = DB::connection()->prepare("select `url_path` from whozawhat_satellite");
         if ($stmt !== FALSE){
             $exec = $stmt->execute();
@@ -71,7 +68,6 @@ class Houston {
     }
     
     private function updateCurrSatellite($satId) {
-        //$stmt = $GLOBALS['mysqli']->prepare("update whozawhat_currSatellite set last = ? where id = 1");
         $stmt = DB::connection()->prepare("update whozawhat_currSatellite set last = ? where id = 1");
         if ($stmt !== FALSE && (int)$satId >= 0 ){
             $stmt->bind_param('i', $satId);
@@ -83,30 +79,34 @@ class Houston {
         return FALSE;
     }
     
+    private function nextSatellite(){
+        return ($this->currSatellite + 1) % $this->satelliteCardinality;
+    }
+    
     public function getItem($itemID, $region) {
         $json = file_get_contents($this->satellites[$this->currSatellite]."item.php?id=".$itemID."&region=".$region."&locale=".$this->locale);
-        $this->currSatellite = ($this->currSatellite + 1) % $this->satelliteCardinality;
+        $this->currSatellite = $this->nextSatellite();
         $this->updateCurrSatellite($this->currSatellite);
         return $json;
     }
     
     public function getCharacter($name, $realm, $region, $keys) {
         $json = file_get_contents($this->satellites[$this->currSatellite]."character.php?name=".$name."&region=".$region."&realm=".$realm."&locale=".$this->locale."&fields=".$keys);
-        $this->currSatellite = ($this->currSatellite + 1) % $this->satelliteCardinality;
+        $this->currSatellite = $this->nextSatellite();
         $this->updateCurrSatellite($this->currSatellite);
         return $json;
     }
     
     public function getRealm($region) {
         $json = file_get_contents($this->satellites[$this->currSatellite]."realm.php?region=".$region."&locale=".$this->locale);
-        $this->currSatellite = ($this->currSatellite + 1) % $this->satelliteCardinality;
+        $this->currSatellite = $this->nextSatellite();
         $this->updateCurrSatellite($this->currSatellite);
         return $json;
     }
     
     public function getItemContext($itemID, $region, $context) {
         $json = file_get_contents($this->satellites[$this->currSatellite]."itemContext.php?id=".$itemID."&region=".$region."&locale=".$this->locale."&context=".$context);
-        $this->currSatellite = ($this->currSatellite + 1) % $this->satelliteCardinality;
+        $this->currSatellite = $this->nextSatellite();
         $this->updateCurrSatellite($this->currSatellite);
         return $json;
     }
