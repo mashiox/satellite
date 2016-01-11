@@ -11,7 +11,7 @@ function BattleNet_getCharacter($name, $realm, $region, $locale, $fields) {
     $path = "/wow/character/".$realm."/".$name."?fields=".$fields."&locale=".$locale."&apikey=".API_KEY;
     $url = "https://".strtolower($region).".api.battle.net".$path;
     
-    $header = bnet_helper::setHeader();
+    $header = bnetHelper::setHeader();
     $curl = curl_init();
     curl_setopt($curl, CURLOPT_URL, $url);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -33,8 +33,8 @@ function BattleNet_getRealmStatus($region, $locale) {
     }
     $path = "/wow/realm/status";
     //$url = "https://".strtolower($region).".api.battle.net".$path."?locale=".$locale."&apikey=".API_KEY;
-    $url = bnet_helper::getBNetURL($region, $locale, $path);
-    $header = bnet_helper::setHeader();
+    $url = bnetHelper::getBNetURL($region, $locale, $path);
+    $header = bnetHelper::setHeader();
     $curl = curl_init();
     curl_setopt($curl, CURLOPT_URL, $url);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -58,13 +58,13 @@ function BattleNet_getRawItem($itemID, $region, $locale) {
     //$goodCharacters = array('!', '&', '\'', '(', ')', ':', '@', '-');
     $signPath = "/wow/item/".urlencode($itemID);
     //$signPath = str_replace($badCharacters, $goodCharacters, $signPath);
-    $signPath = str_replace(bnet_helper::badCharacters(), bnet_helper::goodCharacters(), $signPath);
+    $signPath = str_replace(bnetHelper::badCharacters(), bnetHelper::goodCharacters(), $signPath);
 
     $path = "/wow/item/".$itemID;
     //$url = "https://".strtolower($region).".api.battle.net".$path."?locale=".$locale."&apikey=".API_KEY;
-    $url = bnet_helper::getBNetURL($region, $locale, $path);
+    $url = bnetHelper::getBNetURL($region, $locale, $path);
     
-    $header = bnet_helper::setHeader();
+    $header = bnetHelper::setHeader();
     $curl = curl_init();
     curl_setopt($curl, CURLOPT_URL, $url);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -88,13 +88,13 @@ function BattleNet_getRawItemWithContext($itemID, $region, $locale, $context) {
     //$goodCharacters = array('!', '&', '\'', '(', ')', ':', '@', '-');
     $signPath = "/wow/item/".urlencode($itemID)."/".$context;
     //$signPath = str_replace($badCharacters, $goodCharacters, $signPath);
-    $signPath = str_replace(bnet_helper::badCharacters(), bnet_helper::goodCharacters(), $signPath);
+    $signPath = str_replace(bnetHelper::badCharacters(), bnetHelper::goodCharacters(), $signPath);
 
     $path = "/wow/item/".$itemID."/".$context;
     //$url = "https://".strtolower($region).".api.battle.net".$path."?locale=".$locale."&apikey=".API_KEY;
-    $url = bnet_helper::getBNetURL($region, $locale, $path);
+    $url = bnetHelper::getBNetURL($region, $locale, $path);
     
-    $header = bnet_helper::setHeader();
+    $header = bnetHelper::setHeader();
     $curl = curl_init();
     curl_setopt($curl, CURLOPT_URL, $url);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -102,9 +102,9 @@ function BattleNet_getRawItemWithContext($itemID, $region, $locale, $context) {
     curl_setopt($curl, CURLOPT_TIMEOUT, 20);
     curl_setopt($curl, CURLOPT_FRESH_CONNECT, 2);
     curl_setopt($curl, CURLOPT_HTTPHEADER,$header);
-    $e = curl_exec($curl);
+    $execStatus = curl_exec($curl);
     if (curl_errno($curl) === 0){
-        return $e;
+        return $execStatus;
     }
     trigger_error("cURL could not connect to Battle.net Item api. Curl error number:".curl_errno($curl));
     return FALSE;
