@@ -10,25 +10,20 @@ function BattleNet_getCharacter($name, $realm, $region, $locale, $fields) {
     
     $path = "/wow/character/".$realm."/".$name."?fields=".$fields."&locale=".$locale."&apikey=".API_KEY;
     $url = "https://".strtolower($region).".api.battle.net".$path;
-    $req = date('D, d M Y H:i:s T');
     
-    $header = array(
-        "Accept:",
-        "Date: " .$req,
-        "Content-Type: application/x-www-form-urlencoded; charset=utf-8",
-    );
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 20);
-    curl_setopt($ch, CURLOPT_FRESH_CONNECT, 2);
-    curl_setopt($ch, CURLOPT_HTTPHEADER,$header);
-    $execStatus = curl_exec($ch);
-    if (curl_errno($ch) === 0){
+    $header = bnet_helper::setHeader();
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 10);
+    curl_setopt($curl, CURLOPT_TIMEOUT, 20);
+    curl_setopt($curl, CURLOPT_FRESH_CONNECT, 2);
+    curl_setopt($curl, CURLOPT_HTTPHEADER,$header);
+    $execStatus = curl_exec($curl);
+    if (curl_errno($curl) === 0){
         return $execStatus;
     }
-    trigger_error("cURL could not connect to battle.net api. Curl error number:".curl_errno($ch));
+    trigger_error("cURL could not connect to battle.net api. Curl error number:".curl_errno($curl));
     return FALSE;
 } 
 
@@ -37,25 +32,21 @@ function BattleNet_getRealmStatus($region, $locale) {
         return FALSE;
     }
     $path = "/wow/realm/status";
-    $url = "https://".strtolower($region).".api.battle.net".$path."?locale=".$locale."&apikey=".API_KEY;
-    $req = date('D, d M Y H:i:s T');
-    $header = array(
-        "Accept:",
-        "Date: ".$req,
-        "Content-Type: application/x-www-form-urlencoded; charset=utf-8",
-    );
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 20);
-    curl_setopt($ch, CURLOPT_FRESH_CONNECT, 2);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-    $e = curl_exec($ch);
-    if (curl_errno($ch) === 0){
+    //$url = "https://".strtolower($region).".api.battle.net".$path."?locale=".$locale."&apikey=".API_KEY;
+    $url = bnet_helper::getBNetURL($region, $locale, $path);
+    $header = bnet_helper::setHeader();
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 10);
+    curl_setopt($curl, CURLOPT_TIMEOUT, 20);
+    curl_setopt($curl, CURLOPT_FRESH_CONNECT, 2);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+    $e = curl_exec($curl);
+    if (curl_errno($curl) === 0){
         return $e;
     }
-    trigger_error("cURL could not connect to battle.net api. Curl error number:".curl_errno($ch));
+    trigger_error("cURL could not connect to battle.net api. Curl error number:".curl_errno($curl));
     return FALSE;
 }
 
@@ -63,32 +54,29 @@ function BattleNet_getRawItem($itemID, $region, $locale) {
     if (empty($itemID) || !is_numeric($itemID)){
         return FALSE;
     }
-    $badCharacters = array('%21', '%26', '%27', '%28', '%29', '%3A', '%40', '+');
-    $goodCharacters = array('!', '&', '\'', '(', ')', ':', '@', '-');
+    //$badCharacters = array('%21', '%26', '%27', '%28', '%29', '%3A', '%40', '+');
+    //$goodCharacters = array('!', '&', '\'', '(', ')', ':', '@', '-');
     $signPath = "/wow/item/".urlencode($itemID);
-    $signPath = str_replace($badCharacters, $goodCharacters, $signPath);
+    //$signPath = str_replace($badCharacters, $goodCharacters, $signPath);
+    $signPath = str_replace(bnet_helper::badCharacters(), bnet_helper::goodCharacters(), $signPath);
 
     $path = "/wow/item/".$itemID;
-    $url = "https://".strtolower($region).".api.battle.net".$path."?locale=".$locale."&apikey=".API_KEY;
-    $req = date('D, d M Y H:i:s T');
-
-    $header = array(
-        "Accept:",
-        "Date: " . $req,
-        "Content-Type: application/x-www-form-urlencoded; charset=utf-8",
-    );
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 20);
-    curl_setopt($ch, CURLOPT_FRESH_CONNECT, 2);
-    curl_setopt($ch, CURLOPT_HTTPHEADER,$header);
-    $execStatus = curl_exec($ch);
-    if (curl_errno($ch) === 0){
+    //$url = "https://".strtolower($region).".api.battle.net".$path."?locale=".$locale."&apikey=".API_KEY;
+    $url = bnet_helper::getBNetURL($region, $locale, $path);
+    
+    $header = bnet_helper::setHeader();
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 10);
+    curl_setopt($curl, CURLOPT_TIMEOUT, 20);
+    curl_setopt($curl, CURLOPT_FRESH_CONNECT, 2);
+    curl_setopt($curl, CURLOPT_HTTPHEADER,$header);
+    $execStatus = curl_exec($curl);
+    if (curl_errno($curl) === 0){
         return $execStatus;
     }
-    trigger_error("cURL could not connect to Battle.net Item api. Curl error number:".curl_errno($ch));
+    trigger_error("cURL could not connect to Battle.net Item api. Curl error number:".curl_errno($curl));
     return FALSE;
 }
 
@@ -96,32 +84,29 @@ function BattleNet_getRawItemWithContext($itemID, $region, $locale, $context) {
     if (empty($itemID) || !is_numeric($itemID)){
         return FALSE;
     }
-    $badCharacters = array('%21', '%26', '%27', '%28', '%29', '%3A', '%40', '+');
-    $goodCharacters = array('!', '&', '\'', '(', ')', ':', '@', '-');
+    //$badCharacters = array('%21', '%26', '%27', '%28', '%29', '%3A', '%40', '+');
+    //$goodCharacters = array('!', '&', '\'', '(', ')', ':', '@', '-');
     $signPath = "/wow/item/".urlencode($itemID)."/".$context;
-    $signPath = str_replace($badCharacters, $goodCharacters, $signPath);
+    //$signPath = str_replace($badCharacters, $goodCharacters, $signPath);
+    $signPath = str_replace(bnet_helper::badCharacters(), bnet_helper::goodCharacters(), $signPath);
 
     $path = "/wow/item/".$itemID."/".$context;
-    $url = "https://".strtolower($region).".api.battle.net".$path."?locale=".$locale."&apikey=".API_KEY;
-    $req = date('D, d M Y H:i:s T');
-
-    $header = array(
-        "Accept:",
-        "Date: " . $req,
-        "Content-Type: application/x-www-form-urlencoded; charset=utf-8",
-    );
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 20);
-    curl_setopt($ch, CURLOPT_FRESH_CONNECT, 2);
-    curl_setopt($ch, CURLOPT_HTTPHEADER,$header);
-    $e = curl_exec($ch);
-    if (curl_errno($ch) === 0){
+    //$url = "https://".strtolower($region).".api.battle.net".$path."?locale=".$locale."&apikey=".API_KEY;
+    $url = bnet_helper::getBNetURL($region, $locale, $path);
+    
+    $header = bnet_helper::setHeader();
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 10);
+    curl_setopt($curl, CURLOPT_TIMEOUT, 20);
+    curl_setopt($curl, CURLOPT_FRESH_CONNECT, 2);
+    curl_setopt($curl, CURLOPT_HTTPHEADER,$header);
+    $e = curl_exec($curl);
+    if (curl_errno($curl) === 0){
         return $e;
     }
-    trigger_error("cURL could not connect to Battle.net Item api. Curl error number:".curl_errno($ch));
+    trigger_error("cURL could not connect to Battle.net Item api. Curl error number:".curl_errno($curl));
     return FALSE;
 }
 
