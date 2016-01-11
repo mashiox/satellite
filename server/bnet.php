@@ -41,9 +41,9 @@ function BattleNet_getRealmStatus($region, $locale) {
     curl_setopt($curl, CURLOPT_TIMEOUT, 20);
     curl_setopt($curl, CURLOPT_FRESH_CONNECT, 2);
     curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
-    $e = curl_exec($curl);
+    $execStatus = curl_exec($curl);
     if (curl_errno($curl) === 0){
-        return $e;
+        return $execStatus;
     }
     trigger_error("cURL could not connect to battle.net api. Curl error number:".curl_errno($curl));
     return FALSE;
