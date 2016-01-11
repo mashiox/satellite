@@ -36,8 +36,6 @@ function BattleNet_getRealmStatus($region, $locale) {
     if (empty($region)){
         return FALSE;
     }
-    $badCharacters = array(' ');
-    $goodCharacters = array('%20');
     $path = "/wow/realm/status";
     $url = "https://".strtolower($region).".api.battle.net".$path."?locale=".$locale."&apikey=".API_KEY;
     $req = date('D, d M Y H:i:s T');
