@@ -17,7 +17,8 @@ class Houston {
     }
     
     public static function getCurrentSatellite() {
-        $stmt = $GLOBALS['mysqli']->prepare("select `last` from whozawhat_currSatellite where id=1");
+        //$stmt = $GLOBALS['mysqli']->prepare("select `last` from whozawhat_currSatellite where id=1");
+        $stmt = DB::connection()->prepare("select `last` from whozawhat_currSatellite where id=1");
         if ($stmt !== FALSE){
             $exec = $stmt->execute();
             if ($exec){
@@ -36,7 +37,8 @@ class Houston {
     }
     
     private static function getSatellite($id) {
-        $stmt = $GLOBALS['mysqli']->prepare("select `url_path` from whozawhat_satellite where id=?");
+        //$stmt = $GLOBALS['mysqli']->prepare("select `url_path` from whozawhat_satellite where id=?");
+        $stmt = DB::connection()->prepare("select `url_path` from whozawhat_satellite where id=?");
         if ($stmt !== FALSE){
             $stmt->bind_param('i', (int)$id);
             $exec = $stmt->execute();
@@ -56,7 +58,8 @@ class Houston {
     }
     
     private static function getAllSatellites() {
-        $stmt = $GLOBALS['mysqli']->prepare("select `url_path` from whozawhat_satellite");
+        //$stmt = $GLOBALS['mysqli']->prepare("select `url_path` from whozawhat_satellite");
+        $stmt = DB::connection()->prepare("select `url_path` from whozawhat_satellite");
         if ($stmt !== FALSE){
             $exec = $stmt->execute();
             if ($exec){
@@ -80,7 +83,8 @@ class Houston {
     }
     
     private function updateCurrSatellite($id) {
-        $stmt = $GLOBALS['mysqli']->prepare("update whozawhat_currSatellite set last = ? where id = 1");
+        //$stmt = $GLOBALS['mysqli']->prepare("update whozawhat_currSatellite set last = ? where id = 1");
+        $stmt = DB::connection()->prepare("update whozawhat_currSatellite set last = ? where id = 1");
         if ($stmt !== FALSE && (int)$id >= 0 ){
             $stmt->bind_param('i', $id);
             if ($stmt->execute()){

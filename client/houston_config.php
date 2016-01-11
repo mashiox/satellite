@@ -1,7 +1,19 @@
 <?php
 
-$GLOBALS['mysqli'] = new mysqli("HOST", "USERNAME", "PASSWORD", "DB");
-// OR Comment the above out and include your MySQL Connection File and set the global to your mysqli object. E Z P Z
+class DB {
+    private static $host        = "hostname",
+                   $user        = "username",
+                   $password    = "password",
+                   $database    = "database";
+    private static $mysqli;
+    private function __construct() {}
+    
+    static function connection(){
+        if ( !self::$mysqli ) 
+            self::$mysqli = new mysqli (self::$host, self::$user, self::$password, self::$database);
+        return self::$mysqli;
+    }
+}
 
 ?>
 
